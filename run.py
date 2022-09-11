@@ -31,12 +31,14 @@ class BytecodeInjecter:
         print("valid jumpdests", self.valid_jumpdests)
         self.mod_bin = self.build_mod_bin()
 
-    def process_bin_str(bin_str):
+    def process_bin_str(self, bin_str):
         if bin_str[:2] == "0x":
             bin_str = bin_str[2:]
 
         # Truncate 32-byte metadata hash
         bin_str = bin_str[:-64]
+
+        return bin_str
 
         # Search for "REVERT INVALID" opcodes and truncate
         """
