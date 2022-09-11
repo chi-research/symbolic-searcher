@@ -191,13 +191,13 @@ parser.add_argument(
     '--base_bin_fname',
     dest='base_bin_fname',
     help="Input filename containing original bin-runtime bytecode",
-    default="OfficialGetter.bin-runtime"
+    default="DeployedGetter.bin-runtime"
 )
 parser.add_argument(
     '--inject_bin_fname',
     dest='inject_bin_fname',
     help="Input filename containing to-be-injected bin-runtime bytecode",
-    default="InjectedAssert.bin-runtime"
+    default="contracts/InjectedAssert/InjectedAssert.bin-runtime"
 )
 parser.add_argument(
     '--output_bin_fname',
