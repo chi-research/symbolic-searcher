@@ -6,17 +6,12 @@ STOP_CODE = "00"
 JUMPDEST_CODE = "5b"
 PUSH2_CODE = "61"
 REVERT_CODE = "fd"
-INVALID_CODE = "fe"
+
 
 class BytecodeInjecter:
     def __init__(self, base_bin, inject_bin):
-        self.base_bin = base_bin
-
-        # Search for "REVERT INVALID" opcodes and truncate
-        invalid_i = inject_bin.find(REVERT_CODE + INVALID_CODE)
-        inject_bin = inject_bin[:invalid_i+2]
-
-        self.inject_bin = inject_bin
+        self.base_bin = self.process_bin_str(base_bin)
+        self.inject_bin = self.process_bin_str(inject_bin)
 
         # Split bin into two-character bytes
         self.base_bytes = [
@@ -25,6 +20,7 @@ class BytecodeInjecter:
         self.inject_bytes = [
             inject_bin[i:i+2] for i in range(0, len(inject_bin), 2)
         ]
+
         self.L = len(self.base_bytes)
         self.K = len(self.inject_bytes)
         self.debug_print()
@@ -34,6 +30,19 @@ class BytecodeInjecter:
         self.valid_jumpdests = self.get_valid_jumpdests_in_inject_bytes()
         print("valid jumpdests", self.valid_jumpdests)
         self.mod_bin = self.build_mod_bin()
+
+    def process_bin_str(bin_str):
+        if bin_str[:2] == "0x":
+            bin_str = bin_str[2:]
+
+        # Truncate 32-byte metadata hash
+        bin_str = bin_str[:-64]
+
+        # Search for "REVERT INVALID" opcodes and truncate
+        """
+        invalid_i = inject_bin.find(REVERT_CODE + INVALID_CODE)
+        inject_bin = inject_bin[:invalid_i+2]
+        """
 
     def get_stop_sections_in_base_bytes(self):
         """
@@ -116,7 +125,7 @@ class BytecodeInjecter:
                 self.inject_bin, self.valid_jumpdests, curr_inject_offset + b-a
             )
             snippet = base_bin[2*a:2*b]
-            print("Appent snippet ", snippet)
+            print("Append snippet ", snippet)
             injection = base_bin[2*a:2*b] + mod_inject_bin
             print("Injection ", injection)
 
