@@ -30,9 +30,9 @@ class BytecodeInjector:
         self.debug_print()
         
         self.stop_sections = self.get_stop_sections_in_base_bytes()[:2]
-        print("stop_sections", self.stop_sections)
+        print("[get_stop_sections_in_base_bytes]", self.stop_sections)
         self.valid_jumpdests = self.get_valid_jumpdests_in_inject_bytes()
-        print("valid jumpdests", self.valid_jumpdests)
+        print("[get_valid_jumpdests_in_inject_bytes]", self.valid_jumpdests)
 
     def process_bin_str(self, bin_str):
         bin_str = bin_str.strip()
@@ -100,7 +100,7 @@ class BytecodeInjector:
                 push_jumpdest_instr = PUSH2_CODE + jumpdest_loc # PUSH2 <JUMPDEST_LOC>
 
                 # ========= DEBUG =========
-                print("Found jumpdest at loc", i, "=", jumpdest_loc)
+                print("[get_valid_jumpdests_in_inject_bytes] Found at loc", i, "=", jumpdest_loc)
                 # ========= DEBUG =========
                 
                 occurrences = [
@@ -110,7 +110,7 @@ class BytecodeInjector:
                     valid_jumpdests.append((i, occurrences))
                 else:
                     # ========= DEBUG =========
-                    print("Did not find valid push instruction for", i)
+                    print("[get_valid_jumpdests_in_inject_bytes] Did not find for", i)
                     # ========= DEBUG =========
 
         return valid_jumpdests
@@ -121,7 +121,7 @@ class BytecodeInjector:
         curr_inject_offset = self.L
         inject_offsets = []
 
-        # Append inject_bin once for each (JUMPDEST...STOP) section of base_bin
+        # Append inject_bin once for each [JUMPDEST...STOP) section of base_bin
         for i in range(len(self.stop_sections)):
             inject_offsets.append(curr_inject_offset)
             a, b = self.stop_sections[i]
@@ -132,9 +132,9 @@ class BytecodeInjector:
                 self.inject_bin, self.valid_jumpdests, curr_inject_offset + b-a
             )
             snippet = self.base_bin[2*a:2*b]
-            print("Append snippet ", snippet)
+            print("[build_mod_bin] Append [JUMPDEST...STOP) snippet from base bin:", snippet)
             injection = self.base_bin[2*a:2*b] + mod_inject_bin
-            print("Injection ", injection)
+            print("[build_mod_bin] Inject code:", injection)
 
             concat_bin += injection
             curr_inject_offset = len(concat_bin) // 2
@@ -145,7 +145,11 @@ class BytecodeInjector:
             a, b = self.stop_sections[i] # (JUMPDEST_ind, STOP_ind)
             mod_base_bin = self.replace_hex_index(mod_base_bin, a, inject_offsets[i])
 
-        return mod_base_bin + concat_bin[2 * self.L:]
+        result =  mod_base_bin + concat_bin[2 * self.L:]
+        print("==========")
+        print("Bytecode injection complete!")
+        print("==========")
+        return result
 
     def replace_hex_index(self, bytestring, find_index, replace_index):
         """
@@ -156,7 +160,7 @@ class BytecodeInjector:
         """
         find_hex = self.format_hex_loc(find_index)
         replace_hex = self.format_hex_loc(replace_index)
-        print("replace_hex_index", find_hex, ">>", replace_hex)
+        print("[replace_hex_index in base_bin]: Replace", find_hex, ">>", replace_hex)
         return bytestring.replace(find_hex, replace_hex)
 
     def replace_jumplocs_with_offsets(self, bytestring, valid_jumpdests, offset_value): 
@@ -167,7 +171,6 @@ class BytecodeInjector:
         """
         mod_bytestring = bytestring[:]
         for _, jump_occurrences in valid_jumpdests:
-            print("Replacing", jump_occurrences)
             for j in jump_occurrences:
                 original_loc_hex = bytestring[j+2:j+6]
                 original_loc = int(original_loc_hex, 16)
@@ -175,15 +178,13 @@ class BytecodeInjector:
                 new_loc_hex = self.format_hex_loc(new_loc)
 
                 ########## DEBUG ##########
-                print("Replacing index", j+2, ": ", original_loc_hex, ">>", new_loc_hex)
+                print("[replace_jumplocs_with_offsets] Replacing", j+2, ": ", original_loc_hex, ">>", new_loc_hex)
                 ########## DEBUG ##########
-                print(mod_bytestring[j+2:j+6])
                 mod_bytestring = (
                     mod_bytestring[:j+2] +
                     new_loc_hex +
                     mod_bytestring[j+6:]
                 )   
-                print(mod_bytestring[j+2:j+6])
 
         return mod_bytestring 
 
@@ -236,5 +237,6 @@ f.close()
 injecter = BytecodeInjector(base_bin_str, inject_bin_str)
 f = open(args.output_bin_fname, "w")
 mod_bin_str = injecter.build_mod_bin()
+print("Writing result to file...")
 f.write(mod_bin_str)
 f.close()
