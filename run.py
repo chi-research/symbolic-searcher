@@ -207,7 +207,8 @@ parser.add_argument(
     '--base_bin_fname',
     dest='base_bin_fname',
     help="Input filename containing original bin-runtime bytecode",
-    default="DeployedGetter.bin-runtime"
+    # default="DeployedGetter.bin-runtime"
+    default="contracts/DarkForestGetter/Getter.bin-runtime"
 )
 parser.add_argument(
     '--inject_bin_fname',
