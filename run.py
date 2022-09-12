@@ -135,7 +135,7 @@ class BytecodeInjecter:
             curr_inject_offset = len(concat_bin) // 2
 
         # Modify base_bin to jump to inject_offsets
-        mod_base_bin = base_bin[:]
+        mod_base_bin = self.base_bin[:]
         for i in range(len(self.stop_sections)):
             a, b = self.stop_sections[i] # (JUMPDEST_ind, STOP_ind)
             mod_base_bin = self.replace_hex_index(mod_base_bin, a, inject_offsets[i])
