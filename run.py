@@ -15,10 +15,10 @@ class BytecodeInjecter:
 
         # Split bin into two-character bytes
         self.base_bytes = [
-            base_bin[i:i+2] for i in range(0, len(base_bin), 2)
+            self.base_bin[i:i+2] for i in range(0, len(self.base_bin), 2)
         ]
         self.inject_bytes = [
-            inject_bin[i:i+2] for i in range(0, len(inject_bin), 2)
+            self.inject_bin[i:i+2] for i in range(0, len(self.inject_bin), 2)
         ]
 
         self.L = len(self.base_bytes)
@@ -29,9 +29,9 @@ class BytecodeInjecter:
         print("stop_sections", self.stop_sections)
         self.valid_jumpdests = self.get_valid_jumpdests_in_inject_bytes()
         print("valid jumpdests", self.valid_jumpdests)
-        self.mod_bin = self.build_mod_bin()
 
     def process_bin_str(self, bin_str):
+        bin_str = bin_str.strip()
         if bin_str[:2] == "0x":
             bin_str = bin_str[2:]
 
@@ -111,7 +111,7 @@ class BytecodeInjecter:
         return valid_jumpdests
 
     def build_mod_bin(self):
-        concat_bin = base_bin[:]
+        concat_bin = self.base_bin[:]
 
         curr_inject_offset = self.L
         inject_offsets = []
@@ -225,11 +225,10 @@ f.close()
 
 f = open(args.inject_bin_fname)
 inject_bin = f.read()
-print("Inject bin", inject_bin)
 f.close()
 
 injecter = BytecodeInjecter(base_bin, inject_bin)
-
 f = open(args.output_bin_fname, "w")
-f.write(injecter.mod_bin)
+mod_bin = injecter.build_mod_bin()
+f.write(mod_bin)
 f.close()
