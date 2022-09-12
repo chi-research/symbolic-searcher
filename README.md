@@ -36,7 +36,7 @@ hevm symbolic \
   --show-tree \
   --storage-model ConcreteS \
   --code $(cat BytecodeInjecterOutput.bin-runtime) \
-  --block 10741412 \
+  --block 10741412
 ```
 
 You should get the following output
@@ -67,6 +67,32 @@ Callvalue:
               Revert0x4e487b710000000000000000000000000000000000000000000000000000000000000001
 ```
 which demonstrates that the symbolic executor has found the correct caller address to extract value with the `get()` call.
+
+Note that if we were to call `hevm symbolic` on the next block, 10741413, we see the contract execution revert with error `"UniswapV2: INSUFFICIENT_LIQUIDITY_BURNED"` as another attacker has already executed the Dark Forest `burn()` opportunity in that block:
+
+```
+hevm symbolic \
+  --rpc $ETH_RPC_URL \
+  --address $CONTRACT_ADDR \
+  --sig "get()"\
+  --get-models \
+  --show-tree \
+  --storage-model ConcreteS \
+  --code $(cat BytecodeInjecterOutput.bin-runtime) \
+  --block 10741413
+checking postcondition...
+Q.E.D.
+Explored: 5 branches without assertion violations
+├ 0     IsZero(IsZero(CallValue))
+│       Revert
+│       
+└ 1     IsZero(IsZero(CallValue))
+  ├ 0   IsZero(0xffffffffffffffffffffffffffffffffffffffff and CALLER == 0xffffffffffffffffffffffffffffffffffffffff and 0xffffffffffffffffffffffffffffffffffffffff and 0xedd764aaa77c2148782ce5bcb8a3ada80d932942 / 0x100 ** 0x0)
+  │     Revert("no-getter")
+  │     
+  └ 1   IsZero(0xffffffffffffffffffffffffffffffffffffffff and CALLER == 0xffffffffffffffffffffffffffffffffffffffff and 0xffffffffffffffffffffffffffffffffffffffff and 0xedd764aaa77c2148782ce5bcb8a3ada80d932942 / 0x100 ** 0x0)
+        Revert("UniswapV2: INSUFFICIENT_LIQUIDITY_BURNED")
+```
 
 # Additional Details about hevm
 In our example, we injected a custom assert to the `get()` call of a deployed Mainnet contract https://etherscan.io/address/0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6.
