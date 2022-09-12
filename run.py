@@ -38,13 +38,12 @@ class BytecodeInjecter:
         # Truncate 32-byte metadata hash
         bin_str = bin_str[:-64]
 
-        return bin_str
-
         # Search for "REVERT INVALID" opcodes and truncate
-        """
-        invalid_i = inject_bin.find(REVERT_CODE + INVALID_CODE)
-        inject_bin = inject_bin[:invalid_i+2]
-        """
+        invalid_i = bin_str.find(REVERT_CODE + "fe")
+        if invalid_i != -1: 
+            bin_str = bin_str[:invalid_i+2]
+
+        return bin_str
 
     def get_stop_sections_in_base_bytes(self):
         """
