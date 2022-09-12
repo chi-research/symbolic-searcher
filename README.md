@@ -1,3 +1,12 @@
+# Background
+Symbolic Searcher identifies long-tail MEV using symbolic execution and bytecode injections. We demonstrate a symbolic searcher on the the canonical [Ethereum is a Dark Forest](https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest) example published.
+
+# Research Report
+amychou TODO: Link to research report
+
+# Demo
+amychou TODO: Link to demonstration
+
 # Setup
 Install `hevm` and `seth` by following the dapptools installation instructions outlined in https://github.com/dapphub/dapptools. Specifially, make sure you install Nix and then call:
 ```
