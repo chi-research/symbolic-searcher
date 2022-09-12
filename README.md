@@ -94,7 +94,7 @@ Explored: 5 branches without assertion violations
         Revert("UniswapV2: INSUFFICIENT_LIQUIDITY_BURNED")
 ```
 
-# Additional Details about hevm
+# Additional Details on hevm
 In our example, we injected a custom assert to the `get()` call of a deployed Mainnet contract https://etherscan.io/address/0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6.
 
 1. First, test `hevm symbolic` on the deployed bytecode without any modifications.
@@ -134,17 +134,21 @@ Explored: 11 branches without assertion violations
 ```
 2. To run `hevm` on a locally compiled contract, first compile the contract into bytecode.
 ```
-solc --bin-runtime -o . Getter.sol  --overwrite
+solc --bin-runtime -o contracts/DarkForestGetter/ contracts/DarkForestGetter/DarkForestGetter.sol  --overwrite
 ```
-
-
-
-
-
-
-## Injecting custom asserts to 
-1. Compile our custom `InjectedAssert
+Then run `hevm symbolic` with the argument `--code` to read from the output bytecode.
 ```
-sh -v hevm_exec.sh
+hevm symbolic --rpc $ETH_RPC_URL --address 0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6 --sig "get()" --get-models --show-tree --storage-model ConcreteS --block 10741412 --code $(<contracts/DarkForestGetter/Getter.bin-runtime)
 ```
-TODO: amychou
+You should see a similar output as before.
+
+3. To compile and run `hevm symbolic` on our `DarkForestGetterInjectedV2.sol` contract:
+
+```
+solc --bin-runtime -o contracts/DarkForestGetterInjectedV2/ contracts/DarkForestGetterInjectedV2/DarkForestGetterInjectedV2.sol --overwrite
+
+hevm symbolic --rpc $ETH_RPC_URL --address 0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6 --sig "get()" --get-models --show-tree --storage-model ConcreteS --block 10741412 --code $(<contracts/DarkForestGetterInjectedV2/Getter.bin-runtime)
+```
+You should see the executor revert on the assertion we included in the source code.
+
+4. For the final workflow that does not require target contract source code and instead performs custom injection, see the previous section.
