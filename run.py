@@ -8,7 +8,7 @@ PUSH2_CODE = "61"
 REVERT_CODE = "fd"
 
 
-class BytecodeInjecter:
+class BytecodeInjector:
     def __init__(self, base_bin, inject_bin):
         self.base_bin = self.process_bin_str(base_bin)
         self.inject_bin = self.process_bin_str(inject_bin)
@@ -220,7 +220,7 @@ parser.add_argument(
     '--output_bin_fname',
     dest='output_bin_fname',
     help="Input filename for output bin-runtime bytecode",
-    default="BytecodeInjecterOutput.bin-runtime"
+    default="BytecodeInjectorOutput.bin-runtime"
 )
 
 args = parser.parse_args()
@@ -233,7 +233,7 @@ f = open(args.inject_bin_fname)
 inject_bin_str = f.read()
 f.close()
 
-injecter = BytecodeInjecter(base_bin_str, inject_bin_str)
+injecter = BytecodeInjector(base_bin_str, inject_bin_str)
 f = open(args.output_bin_fname, "w")
 mod_bin_str = injecter.build_mod_bin()
 f.write(mod_bin_str)
