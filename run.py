@@ -131,9 +131,9 @@ class BytecodeInjecter:
             mod_inject_bin = self.replace_jumplocs_with_offsets(
                 self.inject_bin, self.valid_jumpdests, curr_inject_offset + b-a
             )
-            snippet = base_bin[2*a:2*b]
+            snippet = self.base_bin[2*a:2*b]
             print("Append snippet ", snippet)
-            injection = base_bin[2*a:2*b] + mod_inject_bin
+            injection = self.base_bin[2*a:2*b] + mod_inject_bin
             print("Injection ", injection)
 
             concat_bin += injection
@@ -226,15 +226,15 @@ parser.add_argument(
 args = parser.parse_args()
 
 f = open(args.base_bin_fname)
-base_bin = f.read()
+base_bin_str = f.read()
 f.close()
 
 f = open(args.inject_bin_fname)
-inject_bin = f.read()
+inject_bin_str = f.read()
 f.close()
 
-injecter = BytecodeInjecter(base_bin, inject_bin)
+injecter = BytecodeInjecter(base_bin_str, inject_bin_str)
 f = open(args.output_bin_fname, "w")
-mod_bin = injecter.build_mod_bin()
-f.write(mod_bin)
+mod_bin_str = injecter.build_mod_bin()
+f.write(mod_bin_str)
 f.close()
