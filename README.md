@@ -5,7 +5,7 @@ Symbolic Searcher identifies long-tail MEV using symbolic execution and bytecode
 amychou TODO: Link to research report
 
 # Demo
-amychou TODO: Link to demonstration
+[Video Demo](https://youtu.be/h2S_Q4aqOzs)
 
 # Setup
 Install `hevm` and `seth` by following the dapptools installation instructions outlined in https://github.com/dapphub/dapptools. Specifially, make sure you install Nix and then call:
