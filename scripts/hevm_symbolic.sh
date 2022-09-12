@@ -8,5 +8,5 @@ hevm symbolic \
   --get-models \
   --show-tree \
   --storage-model ConcreteS \
-  --code $(cat BytecodeInjecterOutput.bin-runtime) \
+  --code $(cat BytecodeInjectorOutput.bin-runtime) \
   --block 10741412 \
