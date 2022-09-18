@@ -13,10 +13,6 @@ class BytecodeInjector:
         self.base_bin = self.process_bin_str(base_bin)
         self.inject_bin = self.process_bin_str(inject_bin)
 
-        invalid_i = self.inject_bin.find(REVERT_CODE + "fe")
-        if invalid_i != -1: 
-            self.inject_bin = self.inject_bin[:invalid_i+2]
-
         # Split bin into two-character bytes
         self.base_bytes = [
             self.base_bin[i:i+2] for i in range(0, len(self.base_bin), 2)
@@ -39,15 +35,12 @@ class BytecodeInjector:
         if bin_str[:2] == "0x":
             bin_str = bin_str[2:]
 
-        # Truncate 32-byte metadata hash
-        bin_str = bin_str[:-64]
+        # Get CBOR length from last two bytes
+        length = int(bin_str[-4:], 16)
+        print("CBOR length:", length, " bytes")
 
-        # Search for "REVERT INVALID" opcodes and truncate
-        """
-        invalid_i = bin_str.find(REVERT_CODE + "fe")
-        if invalid_i != -1: 
-            bin_str = bin_str[:invalid_i+2]
-        """
+        # Truncate metadata hash
+        bin_str = bin_str[:-2*(length+2)]
 
         return bin_str
 
