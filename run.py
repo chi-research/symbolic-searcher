@@ -29,7 +29,7 @@ class BytecodeInjector:
         self.K = len(self.inject_bytes)
         self.debug_print()
         
-        self.stop_sections = self.get_stop_sections_in_base_bytes()[:2]
+        self.stop_sections = self.get_stop_sections_in_base_bytes()
         print("[get_stop_sections_in_base_bytes]", self.stop_sections)
         self.valid_jumpdests = self.get_valid_jumpdests_in_inject_bytes()
         print("[get_valid_jumpdests_in_inject_bytes]", self.valid_jumpdests)
@@ -40,7 +40,7 @@ class BytecodeInjector:
             bin_str = bin_str[2:]
 
         # Truncate 32-byte metadata hash
-        # bin_str = bin_str[:-64]
+        bin_str = bin_str[:-64]
 
         # Search for "REVERT INVALID" opcodes and truncate
         """
