@@ -33,7 +33,7 @@ solc --bin-runtime -o contracts/InjectedAssert contracts/InjectedAssert/Injected
 seth code 0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6 > DeployedGetter.bin-runtime
 
 # Run bytecode injection
-python run.py --base_bin_fname DeployedGetter.bin-runtime --inject_bin_fname contracts/InjectedAssert/InjectedAssert.bin-runtime --output_bin_fname BytecodeInjecterOutput.bin-runtime
+python run.py --base_bin_fname DeployedGetter.bin-runtime --inject_bin_fname contracts/InjectedAssert/InjectedAssert.bin-runtime --output_bin_fname BytecodeInjectorOutput.bin-runtime
 
 # Run symbolic execution on output bytecode
 CONTRACT_ADDR=0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6
@@ -44,7 +44,7 @@ hevm symbolic \
   --get-models \
   --show-tree \
   --storage-model ConcreteS \
-  --code $(cat BytecodeInjecterOutput.bin-runtime) \
+  --code $(cat BytecodeInjectorOutput.bin-runtime) \
   --block 10741412
 ```
 
