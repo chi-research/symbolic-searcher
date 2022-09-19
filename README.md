@@ -1,3 +1,12 @@
+# Background
+Symbolic Searcher identifies long-tail MEV using symbolic execution and bytecode injections. We demonstrate a symbolic searcher on the the canonical [Ethereum is a Dark Forest](https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest) example published.
+
+# Research Report
+[Research Report for Encode x Wintermute MEV Hackathon 2022](https://github.com/bzhang42/symbolic-searcher/blob/main/research_report.pdf)
+
+# Demo
+[Video Demo](https://youtu.be/h2S_Q4aqOzs)
+
 # Setup
 Install `hevm` and `seth` by following the dapptools installation instructions outlined in https://github.com/dapphub/dapptools. Specifially, make sure you install Nix and then call:
 ```
@@ -24,7 +33,7 @@ solc --bin-runtime -o contracts/InjectedAssert contracts/InjectedAssert/Injected
 seth code 0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6 > DeployedGetter.bin-runtime
 
 # Run bytecode injection
-python run.py --base_bin_fname DeployedGetter.bin-runtime --inject_bin_fname contracts/InjectedAssert/InjectedAssert.bin-runtime --output_bin_fname BytecodeInjecterOutput.bin-runtime
+python run.py --base_bin_fname DeployedGetter.bin-runtime --inject_bin_fname contracts/InjectedAssert/InjectedAssert.bin-runtime --output_bin_fname BytecodeInjectorOutput.bin-runtime
 
 # Run symbolic execution on output bytecode
 CONTRACT_ADDR=0xa4004b352fcbb913f0ddaba2454e7ff9cb64bdf6
@@ -35,7 +44,7 @@ hevm symbolic \
   --get-models \
   --show-tree \
   --storage-model ConcreteS \
-  --code $(cat BytecodeInjecterOutput.bin-runtime) \
+  --code $(cat BytecodeInjectorOutput.bin-runtime) \
   --block 10741412
 ```
 

@@ -8,5 +8,5 @@ hevm exec  \
   --rpc $ETH_RPC_URL \
   --block 10741412 \
   --gas 1000000000 \
-  --code $(cat BytecodeInjecterOutput.bin-runtime) \
+  --code $(cat BytecodeInjectorOutput.bin-runtime) \
   --debug
