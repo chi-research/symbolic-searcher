@@ -3,6 +3,7 @@ import re
 import logging
 
 STOP_CODE = "00"
+RETURN_CODE = "f3"
 JUMPDEST_CODE = "5b"
 PUSH2_CODE = "61"
 REVERT_CODE = "fd"
@@ -61,7 +62,7 @@ class BytecodeInjector:
             if opcode == JUMPDEST_CODE:
                 last_jumpdest = i
             elif opcode[0] == '6' or opcode[0] == '7':
-                # Corresponds to JUMPX instruction, so jump forward
+                # Corresponds to PUSHX instruction, so jump forward
                 opcode_val = int("0x" + opcode, 16) # Eval in base 10
                 last_pushx = i
                 last_x = opcode_val - 0x60 + 1
