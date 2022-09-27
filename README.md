@@ -1,5 +1,5 @@
 # Background
-Symbolic Searcher identifies long-tail MEV using symbolic execution and bytecode injections. We demonstrate a symbolic searcher on the the canonical [Ethereum is a Dark Forest](https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest) example published.
+Symbolic Searcher identifies long-tail MEV using symbolic execution and bytecode injections. We demonstrate a symbolic searcher on the the canonical [Ethereum is a Dark Forest](https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest) example published. Disclaimer: this is currently a proof of concept.
 
 # Research Report
 [Research Report for Encode x Wintermute MEV Hackathon 2022](https://github.com/bzhang42/symbolic-searcher/blob/main/research_report.pdf)
